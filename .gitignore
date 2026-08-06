@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code
+.vscode/
+
+# Dataset
+*.csv
+
+# Dataset download/extracted files
+f7546561558c07c5_NFV3DATA-A11964_A11964/
+f7546561558c07c5_NFV3DATA-A11964_A11964.zip
+
+# Trained models
+models/
+*.keras
+*.pkl
+
+# Research papers
+research papers/
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+# Environment
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
