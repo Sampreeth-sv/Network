@@ -52,9 +52,12 @@ for _f in ("rf_model.pkl", "ae_model.keras", "scaler.pkl", "artifacts.json"):
         )
         sys.exit(1)
 
-# ── Load inference engine ─────────────────────────────────────────────────────
+# ── Load inference engine (RF + AE) ─────────────────────────────────────────
 from inference import engine as _inference_engine
 _inference_engine.load()
+
+# ── Optionally load XGBoost (soft-fails if not yet trained) ──────────────────
+_inference_engine.load_xgb()
 
 # ── Interface selection ───────────────────────────────────────────────────────
 from live_capture import (
@@ -199,6 +202,7 @@ app.layout = html.Div([
                 "duration",
                 "true_label",
                 "rf_prob",
+                "xgb_prob",
                 "ae_mse",
                 "score_combined",
             ]
@@ -354,8 +358,9 @@ def update_ui(pos, _n_intervals):
 
     # ── Summary cards ─────────────────────────────────────────────────────────
     total    = len(window)
-    rf_alerts = int((window["rf_pred"] == 1).sum()) if total else 0
-    ae_alerts = int((window["ae_pred"] == 1).sum()) if total else 0
+    rf_alerts  = int((window["rf_pred"] == 1).sum()) if total else 0
+    ae_alerts  = int((window["ae_pred"] == 1).sum()) if total else 0
+    xgb_alerts = int((window["xgb_pred"] == 1).sum()) if (total and "xgb_pred" in window.columns) else None
 
     # true_label is always "N/A — Live Traffic" for live flows
     # The card still exists but shows N/A to preserve layout
@@ -386,6 +391,15 @@ def update_ui(pos, _n_intervals):
         ], style={
             "padding"     : "10px",
             "border"      : "1px solid #f8d88c",
+            "borderRadius": "6px",
+        }),
+
+        html.Div([
+            html.H3("XGBoost Alerts"),
+            html.P(str(xgb_alerts) if xgb_alerts is not None else "N/A (not trained)"),
+        ], style={
+            "padding"     : "10px",
+            "border"      : "1px solid #c0a0f0",
             "borderRadius": "6px",
         }),
 
@@ -491,7 +505,7 @@ def update_ui(pos, _n_intervals):
     recent_cols = [
         "timestamp", "src_ip", "dst_ip", "src_port", "dst_port",
         "protocol", "pkt_count", "byte_count", "duration",
-        "true_label", "rf_prob", "ae_mse", "score_combined",
+        "true_label", "rf_prob", "xgb_prob", "ae_mse", "score_combined",
     ]
 
     if window.empty:
@@ -523,7 +537,7 @@ if __name__ == "__main__":
     import atexit
     atexit.register(stop_capture)
 
-    print(f"\nDashboard → http://127.0.0.1:{DASHBOARD_PORT}\n")
+    print(f"\nDashboard -> http://127.0.0.1:{DASHBOARD_PORT}\n")
 
     app.run(
         debug=False,

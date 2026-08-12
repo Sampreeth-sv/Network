@@ -190,18 +190,22 @@ def select_interface_interactive() -> Optional[str]:
             choice = input(
                 "Enter interface number (or press ENTER for auto-select): "
             ).strip()
-            if choice == "":
-                # Auto-select: prefer Wi-Fi or Ethernet by description
-                for idx, name, desc in ifaces:
-                    label = (desc or name).lower()
-                    if any(k in label for k in ("wi-fi", "wifi", "wireless",
-                                                "ethernet", "eth")):
-                        print(f"Auto-selected: [{idx}] {desc or name}")
-                        return name
-                idx, name, desc = ifaces[0]
-                print(f"Auto-selected first interface: [{idx}] {desc or name}")
-                return name
+        except (EOFError, KeyboardInterrupt):
+            choice = ""
 
+        if choice == "":
+            # Auto-select: prefer Wi-Fi or Ethernet by description
+            for idx, name, desc in ifaces:
+                label = (desc or name).lower()
+                if any(k in label for k in ("wi-fi", "wifi", "wireless",
+                                            "ethernet", "eth")):
+                    print(f"Auto-selected: [{idx}] {desc or name}")
+                    return name
+            idx, name, desc = ifaces[0]
+            print(f"Auto-selected first interface: [{idx}] {desc or name}")
+            return name
+
+        try:
             idx = int(choice)
             if 0 <= idx < len(ifaces):
                 _, name, desc = ifaces[idx]
@@ -209,8 +213,8 @@ def select_interface_interactive() -> Optional[str]:
                 return name
             else:
                 print(f"Please enter a number between 0 and {len(ifaces) - 1}.")
-        except (ValueError, EOFError):
-            print("Invalid input.")
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
 
 
 # ── Inference + write to live_flows ───────────────────────────────────────────

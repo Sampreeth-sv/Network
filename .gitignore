@@ -1,34 +1,61 @@
+# =========================
 # Python
+# =========================
 __pycache__/
+*.py[cod]
 *.pyc
-*.pyo
 
-# VS Code
-.vscode/
-
-# Dataset
-*.csv
-
-# Dataset download/extracted files
-f7546561558c07c5_NFV3DATA-A11964_A11964/
-f7546561558c07c5_NFV3DATA-A11964_A11964.zip
-
-# Trained models
-models/
-*.keras
-*.pkl
-
-# Research papers
-research papers/
-
-# Jupyter temporary files
+# =========================
+# Jupyter
+# =========================
 .ipynb_checkpoints/
 
-# Environment
-.env
+# =========================
+# Pytest
+# =========================
+.pytest_cache/
+
+# =========================
+# Virtual environments
+# =========================
 venv/
 .venv/
+env/
 
-# OS
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+
+# =========================
+# Datasets and downloads
+# =========================
+NF-UNSW-NB15-v3.csv
+*.zip
+
+# Downloaded dataset folder
+f7546561558c07c5_NFV3DATA-A11964_A11964/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# OS files
+# =========================
 .DS_Store
 Thumbs.db
+
+
+# Large datasets
+*.csv
+*.zip
+f7546561558c07c5_NFV3DATA-A11964_A11964/

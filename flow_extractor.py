@@ -13,7 +13,8 @@ Flows are exported when:
   - The flow has been idle for IDLE_TIMEOUT_S seconds (no new packet)
   - The flow has run for longer than ACTIVE_TIMEOUT_S seconds total
 
-Exported flows contain all 49 features used by the trained RF and AE.
+Exported flows contain all 49 features defined in feature_schema.FEATURE_COLS,
+used by the trained RF, XGBoost, and AE models.
 """
 
 import logging
@@ -21,6 +22,8 @@ import time
 import math
 import struct
 from typing import Dict, List, Optional, Tuple
+
+from feature_schema import FEATURE_COLS  # noqa: F401  (re-exported for callers)
 
 logger = logging.getLogger(__name__)
 
